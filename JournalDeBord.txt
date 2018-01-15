@@ -1,0 +1,22 @@
+http://mherman.org/blog/2016/03/13/designing-a-restful-api-with-node-and-postgres/#.WlfiokvjI1J
+
+
+sudo -u postgres -i
+sudo cd /Users/elisapriollaud/Documents/ECOLE_INGENIEUR/Projet_STAGE/babyfoot_EP
+
+
+BASE DE DONNEES
+Installation PostGreSQL
+creation de la BDD au nom babyfoot
+Tables:
+    Player
+    Encounters
+    Matchs
+
+
+API:
+Installation express
+Creation d'une premiere application
+Installation de pg-promise et bluebird
+
+http://www.fullstacktraining.com/articles/how-to-serve-static-files-with-express

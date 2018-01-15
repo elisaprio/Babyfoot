@@ -1,0 +1,47 @@
+<html>
+    <head>
+            <title>Babyfoot</title>
+        <link rel="stylesheet" type="text/css" href="../stylesheets/style.css">
+    </head>
+
+    <body>
+        <div id="title">
+            <h1>Babyfoot HTML</h1>
+        </div>
+        <div id="newMatch">
+            <input list="players" id="player1">
+            <input list="players" id="player2">
+            <datalist id="players">
+                <option value="Elisa"></option>
+                <option value="Loic"></option>
+                <option value="Adil"></option>
+                <option value="Lea"></option>
+                <option value="Tristan"></option>
+                <option value="Adele"></option>
+            </datalist>
+
+            <!--
+           <script>
+                function newMatch() {
+                    document.getElementById("matches").innerHTML = "Hello World";
+                }
+                </script>
+            -->
+            <script type="text/javascript" src="javascripts/onClick.js"></script>
+            <button type="button" onclick="newMatch('Elisa','Adil');"> New Game</button>
+
+            <p id="matches">La</p>
+
+
+        </div>
+        <div id="displayMatches">
+            <h1>Matches</h1>
+            
+
+
+
+        </div>
+        
+    </body>
+
+</html>
