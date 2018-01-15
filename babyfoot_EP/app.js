@@ -34,14 +34,24 @@ app.use('/users', users);
 
 //render page
 app.get('/', function(req, res, next) {
-  res.sendFile(path.join(__dirname, 'public','layout2.html'));
+  res.sendFile(path.join(__dirname, 'public','main.html'));
 });
+
+/*
+app.get('/new', function(req, res, next) {
+  res.sendFile(path.join(__dirname, 'public','new.html'));
+});
+*/
 
 //queries to show
 var db = require(path.join(__dirname, 'public/javascripts','queries.js'));
 app.get('/all', db.getAllMatches);
-//app.post('/new',db.createMatches2);
-app.post('new',db.createMatches2);
+
+app.get('/new/:idp1/:idp2',db.createMatch);
+
+app.get('/update/:matchID',db.updateMatch);
+
+app.get('/remove/:matchID',db.removeMatch);
 
 
 
