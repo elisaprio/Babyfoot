@@ -1,18 +1,17 @@
 let urlAll = "http://localhost:3000/all/";
 let urlNew = "http://localhost:3000/new/";
 let urlRemove = "http://localhost:3000/remove/";
+let urlUpdate = "http://localhost:3000/update/";
 var encounters = [];
+
+
 // CREATE DYNAMIC TABLE.
 //var table = document.createElement("table");
 var table = null;
 var col = [];
 
 //ON LOAD TABLE
-window.addEventListener("load", loadJSONTable(urlAll),true);
-//document.addEventListener("onload", CreateTableFromJSON(),true);
-//document.getElementById("body").addEventListener("load",loadJSONTable(urlAll),true);
-//document.getElementById("newMatch").addEventListener("load",createTableFromJSON(),true);
-
+document.addEventListener("load", loadJSONTable(urlAll),true);
 function loadJSONTable(url){
     console.log("JSON LOAD");
     var xmlhttp = new XMLHttpRequest();
@@ -36,6 +35,29 @@ function loadJSONTable(url){
     xmlhttp.open("GET", url, true);
     xmlhttp.send(); 
 };
+
+function loadJSONremove(url,index,button){
+    console.log("JSON LOAD REMOVE");
+    var xmlhttp = new XMLHttpRequest();
+    xmlhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            var myArr = JSON.parse(this.responseText);
+            console.log(myArr);
+            encounters  = Object.values(myArr)[0]; 
+            //loadJSONTable(urlAll);
+            var idrow = button.parentNode.parentNode.rowIndex;
+            console.log("DELETE ROW "+idrow); 
+            //var empTab = document.getElementById('empTable');
+           // table.deleteRow(button.parentNode.parentNode.rowIndex);
+            table.deleteRow(idrow);  
+        }
+    };
+    //xmlhttp.open("GET", url+"/"+index, true);
+    xmlhttp.open("GET", url+index, true);
+    xmlhttp.send();
+}
+
+
 
 function loadJSONnewMatch(url){
     var xmlhttp = new XMLHttpRequest();
@@ -77,11 +99,7 @@ function showTable(){
     divContainer.appendChild(table);
 };
 
-function loadJSONremove(url){
-    alert("Button");
-}
-
-function removeRow(){
+function endGame(index,){
 
 }
 
@@ -92,38 +110,102 @@ function addButton(index){
     button.setAttribute('value', "Remove");
     var textnode = document.createTextNode("Remove");         // Create a text node
     button.appendChild(textnode);
-    button.setAttribute("id","b"+index);
-    button.setAttribute('onclick', 'loadJSONremove(urlRemove)');
+    var id ="b"+index;
+    button.setAttribute("id",id);
+    //button.onclick = function () {loadJSONremove(urlRemove,this.index);};   ,'+this+'
+   // button.setAttribute('onclick', 'loadJSONremove(urlRemove,'+index+','+idrow+');');
+    button.addEventListener("click",function (){
+       // document.getElementById(id).
+        loadJSONremove(urlRemove,index,button);
+    });
     return button;
+}
+
+function loadJSONend(url,index,box){
+    console.log("JSON LOAD REMOVE");
+    var xmlhttp = new XMLHttpRequest();
+    xmlhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            var myArr = JSON.parse(this.responseText);
+            console.log(myArr);
+            encounters  = Object.values(myArr)[0]; 
+            //loadJSONTable(urlAll);
+            var idrow = box.parentNode.parentNode.rowIndex;
+            console.log("DELETE ROW "+idrow); 
+            //var empTab = document.getElementById('empTable');
+           // table.deleteRow(button.parentNode.parentNode.rowIndex);
+            //table.deleteRow(idrow);  
+        }
+    };
+    //xmlhttp.open("GET", url+"/"+index, true);
+    xmlhttp.open("GET", url+index, true);
+    xmlhttp.send();
+}
+
+function addCheckboxEnd(index){
+    var checkbox = document.createElement("input");
+    checkbox.setAttribute('type', 'checkbox');
+    checkbox.setAttribute('value', "End");
+    var id ="c"+index;
+    checkbox.setAttribute("id",id);
+    checkbox.addEventListener("click",function (){
+        endGame(urlRemove,index,checkbox);
+
+    });
+    console.log(checkbox);
+    return checkbox;
+    
 }
 
 
 // ADD JSON DATA TO THE TABLE AS ROWS.
 function addRowsToTable(){
+    var index = 0; 
     for (var i = 0; i < encounters.length; i++) {
         tr = table.insertRow(-1);
-        for (var j = 0; j < col.length-1; j++) {
+
+        var tabCell = tr.insertCell(-1);
+        var box = addCheckboxEnd(index);
+        tabCell.appendChild(box); 
+
+        for (var j = 1; j < col.length-1; j++) {
             var tabCell = tr.insertCell(-1);
-            tabCell.innerHTML = encounters[i][col[j]];
-            if(j===0){
-                var index = tabCell.textContent;
+            tabCell.innerHTML = encounters[i][col[j]]; 
+            console.log(tabCell.textContent);
+            if(j===1){
+                index = tabCell.textContent;
+            }
+            if(j===4 && tabCell.textContent==="true"){
+                console.log(tabCell.textContent);
+                box.checked=true;
             }
         }
         //Button to remove row
         var tabCell = tr.insertCell(-1);
         var btn = addButton(index);
-        tabCell.appendChild(btn);        
+        tabCell.appendChild(btn);  
+        
     }
+    
 };
 
 function addOneRowToTable(){
     console.log("NEW LINE");
     tr = table.insertRow(-1);
-    for (var j = 0; j < col.length-1; j++) {
+    var tabCell = tr.insertCell(-1);
+    var box = addCheckboxEnd(0);
+    tabCell.appendChild(box); 
+    
+
+    for (var j = 1; j < col.length-1; j++) {
         var tabCell = tr.insertCell(-1);
         tabCell.innerHTML = encounters[encounters.length-1][col[j]];
-        if(j===0){
+        if(j===1){
             var index = tabCell.textContent;
+        }
+        if(j===4 && tabCell.textContent==="true"){
+            console.log(tabCell.textContent);
+            box.checked=true;
         }
     }
     //Button to remove row
@@ -135,7 +217,12 @@ function addOneRowToTable(){
 function createTableFromJSON() {
     console.log("CREATE TABLE");
     console.log(encounters);
+
+   // table.setAttribute('id', 'empTable');
+
     // EXTRACT VALUE FOR HTML HEADER. 
+    //For the end game buttons
+    col.push("");
     for (var i = 0; i < encounters.length; i++) {
         for (var key in encounters[i]) {
             if (col.indexOf(key) === -1) {
@@ -143,6 +230,8 @@ function createTableFromJSON() {
             }
         }
     }
+
+    //For the remove buttons
     col.push("");
     
     // CREATE HTML TABLE HEADER ROW USING THE EXTRACTED HEADERS ABOVE.
