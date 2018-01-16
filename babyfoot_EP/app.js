@@ -49,7 +49,7 @@ app.get('/all', db.getAllMatches);
 
 app.get('/new/:idp1&:idp2',db.createMatch);
 
-app.get('/update/:matchID',db.updateMatch);
+app.get('/update/:matchID&:state_e',db.updateMatch);
 
 app.get('/remove/:matchID',db.removeMatch);
 

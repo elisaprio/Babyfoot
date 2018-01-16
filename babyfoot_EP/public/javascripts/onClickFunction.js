@@ -36,6 +36,27 @@ function loadJSONTable(url){
     xmlhttp.send(); 
 };
 
+
+function loadJSONend(url,index,box){
+    console.log("JSON LOAD UPDATE");
+    var xmlhttp = new XMLHttpRequest();
+    xmlhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            var myArr = JSON.parse(this.responseText);
+            console.log(myArr);
+            encounters  = Object.values(myArr)[0]; 
+            console.log(encounters);
+            console.log("UPDATE ROW ");  
+            table.refresh();
+        }
+    };
+    //xmlhttp.open("GET", url+"/"+index, true);
+    
+    var url2 =  url+index+"&"+box.checked.toString();
+    xmlhttp.open("GET",url2, true);
+    xmlhttp.send();
+}
+
 function loadJSONremove(url,index,button){
     console.log("JSON LOAD REMOVE");
     var xmlhttp = new XMLHttpRequest();
@@ -44,20 +65,14 @@ function loadJSONremove(url,index,button){
             var myArr = JSON.parse(this.responseText);
             console.log(myArr);
             encounters  = Object.values(myArr)[0]; 
-            //loadJSONTable(urlAll);
             var idrow = button.parentNode.parentNode.rowIndex;
             console.log("DELETE ROW "+idrow); 
-            //var empTab = document.getElementById('empTable');
-           // table.deleteRow(button.parentNode.parentNode.rowIndex);
             table.deleteRow(idrow);  
         }
     };
-    //xmlhttp.open("GET", url+"/"+index, true);
     xmlhttp.open("GET", url+index, true);
     xmlhttp.send();
 }
-
-
 
 function loadJSONnewMatch(url){
     var xmlhttp = new XMLHttpRequest();
@@ -99,10 +114,6 @@ function showTable(){
     divContainer.appendChild(table);
 };
 
-function endGame(index,){
-
-}
-
 //To add button to one row
 function addButton(index){
     var button = document.createElement("button");
@@ -121,38 +132,16 @@ function addButton(index){
     return button;
 }
 
-function loadJSONend(url,index,box){
-    console.log("JSON LOAD REMOVE");
-    var xmlhttp = new XMLHttpRequest();
-    xmlhttp.onreadystatechange = function() {
-        if (this.readyState == 4 && this.status == 200) {
-            var myArr = JSON.parse(this.responseText);
-            console.log(myArr);
-            encounters  = Object.values(myArr)[0]; 
-            //loadJSONTable(urlAll);
-            var idrow = box.parentNode.parentNode.rowIndex;
-            console.log("DELETE ROW "+idrow); 
-            //var empTab = document.getElementById('empTable');
-           // table.deleteRow(button.parentNode.parentNode.rowIndex);
-            //table.deleteRow(idrow);  
-        }
-    };
-    //xmlhttp.open("GET", url+"/"+index, true);
-    xmlhttp.open("GET", url+index, true);
-    xmlhttp.send();
-}
-
 function addCheckboxEnd(index){
     var checkbox = document.createElement("input");
     checkbox.setAttribute('type', 'checkbox');
     checkbox.setAttribute('value', "End");
     var id ="c"+index;
     checkbox.setAttribute("id",id);
-    checkbox.addEventListener("click",function (){
-        endGame(urlRemove,index,checkbox);
+    checkbox.addEventListener("change",function (){
+        loadJSONend(urlUpdate,index,checkbox);
 
     });
-    console.log(checkbox);
     return checkbox;
     
 }
@@ -165,18 +154,16 @@ function addRowsToTable(){
         tr = table.insertRow(-1);
 
         var tabCell = tr.insertCell(-1);
-        var box = addCheckboxEnd(index);
+        var box = addCheckboxEnd(encounters[i][col[1]]);
         tabCell.appendChild(box); 
 
         for (var j = 1; j < col.length-1; j++) {
             var tabCell = tr.insertCell(-1);
             tabCell.innerHTML = encounters[i][col[j]]; 
-            console.log(tabCell.textContent);
             if(j===1){
                 index = tabCell.textContent;
             }
             if(j===4 && tabCell.textContent==="true"){
-                console.log(tabCell.textContent);
                 box.checked=true;
             }
         }
@@ -204,6 +191,7 @@ function addOneRowToTable(){
             var index = tabCell.textContent;
         }
         if(j===4 && tabCell.textContent==="true"){
+            //MANQUE LA MISE DU TEXTE EN GRIS DANS LA CASE
             console.log(tabCell.textContent);
             box.checked=true;
         }

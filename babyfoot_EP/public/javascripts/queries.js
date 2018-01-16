@@ -22,7 +22,7 @@ var db = pgp({//connectionString
 
 // add query functions
 function getAllMatches(req, res, next) {
-  var query = "select * from encounters";
+  var query = "select * from encounters order by id_e";
   db.any(query)
     .then(function (data) {
       res.status(200)
@@ -40,15 +40,16 @@ function getAllMatches(req, res, next) {
 
 
 function updateMatch(req, res, next) {
-    var query = 'update encounters set state_e=true where id_e=$1';
+    var query = 'update encounters set state_e=$1 where id_e=$2';
+    var state_e = req.params.state_e;
     var matchID = parseInt(req.params.matchID);
-    db.none(query,matchID)
+    db.none(query,[state_e,matchID])
       .then(function (data) {
         res.status(200)
           .json({
             status: 'success',
             data: data,
-            message: 'Updated Match : '+matchID,
+            message: 'Updated Match : '+matchID+" state "+state_e,
           });
       }
     )
