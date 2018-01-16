@@ -27,9 +27,9 @@ function getAllMatches(req, res, next) {
     .then(function (data) {
       res.status(200)
         .json({
-          status: 'success',
-          data: data,
-          message: 'Retrieved ALL Matches'
+         // status: 'success',
+          data
+        //  message: 'Retrieved ALL Matches'
         });
     })
     .catch(function (err) {
@@ -83,8 +83,8 @@ function createMatch(req, res, next) {
     .then(function (data) {
       res.status(200)
         .json({
-          status: 'success',
           data: data,
+          status: 'success',
           message: 'Created New Match',
         });
     }

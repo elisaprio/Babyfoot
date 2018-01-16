@@ -2,48 +2,34 @@
     <head>
             <title>Babyfoot</title>
         <link rel="stylesheet" type="text/css" href="../stylesheets/style.css">
+        <script type="text/javascript" src="javascripts/onClickFunction.js"></script>
     </head>
 
-    <body>
+    <body onload="createTableFromJSON()">
         <div id="title">
             <h1>Babyfoot HTML</h1>
         </div>
         <div id="newMatch">
-            <input list="players" id="player1">
-            <input list="players" id="player2">
-            <datalist id="players">
-                <option value="Elisa"></option>
-                <option value="Loic"></option>
-                <option value="Adil"></option>
-                <option value="Lea"></option>
-                <option value="Tristan"></option>
-                <option value="Adele"></option>
-            </datalist>
+            <form id="frm1" action="/submit">
+                    Player One : <input type ="text" id="player1" name="player1">
+                    VS
+                    Player Two : <input type ="text" id="player2" name="player2">
+                    <button type="button" onclick="newMatch();"> New </button>
 
-            <!--
-           <script>
-                function newMatch() {
-                    document.getElementById("matches").innerHTML = "Hello World";
-                }
-                </script>
- -->           
-            <script type="text/javascript" src="javascripts/onClickFunction.js"></script>
-            <button type="button" onclick="newMatch('Elisa','Adil');"> New Game</button>
-
-            
-
-            <p id="matches">La</p>
-
+                    <p id="matches" onchange="loadJSONTable('http://localhost:3000/all');createTableFromJSON();"></p>
+            </form>
 
         </div>
         <div id="displayMatches">
             <h1>Matches</h1>
-            
-
+            <input type="button" onclick="loadJSONTable('http://localhost:3000/all');" value="Load JSON" />
+            <input type="button" onclick="createTableFromJSON();" value="Create Table From JSON" />
+            <input type="button" onclick="addOneRowToTable();" value="Add Row" />
+            <div id="showData"></div>
 
 
         </div>
-        
+       
     </body>
 
 </html>

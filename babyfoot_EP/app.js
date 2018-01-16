@@ -47,7 +47,7 @@ app.get('/new', function(req, res, next) {
 var db = require(path.join(__dirname, 'public/javascripts','queries.js'));
 app.get('/all', db.getAllMatches);
 
-app.get('/new/:idp1/:idp2',db.createMatch);
+app.get('/new/:idp1&:idp2',db.createMatch);
 
 app.get('/update/:matchID',db.updateMatch);
 
