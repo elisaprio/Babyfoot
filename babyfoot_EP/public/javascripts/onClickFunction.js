@@ -2,26 +2,30 @@ let urlAll = "http://localhost:3000/all/";
 let urlNew = "http://localhost:3000/new/";
 var encounters = [];
 // CREATE DYNAMIC TABLE.
-var table = document.createElement("table");
+//var table = document.createElement("table");
+var table = null;
 var col = [];
 
 //ON LOAD TABLE
-window.addEventListener("onload", loadJSONTable(urlAll),true);
+window.addEventListener("load", loadJSONTable(urlAll),true);
 //document.addEventListener("onload", CreateTableFromJSON(),true);
-document.getElementById("body").addEventListener("onload","createTableFromJSON()",true);
+//document.getElementById("body").addEventListener("load",loadJSONTable(urlAll),true);
+//document.getElementById("newMatch").addEventListener("load",createTableFromJSON(),true);
 
 function loadJSONnewMatch(url){
     var xmlhttp = new XMLHttpRequest();
     xmlhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
             var myArr = JSON.parse(this.responseText);
-            console.log(myArr);   
+            console.log(myArr);
+            loadJSONTable(urlAll);   
         }
     };
     xmlhttp.open("GET", url, true);
     xmlhttp.send(); 
 }
 function loadJSONTable(url){
+    console.log("JSON LOAD");
     var xmlhttp = new XMLHttpRequest();
     xmlhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
@@ -29,11 +33,21 @@ function loadJSONTable(url){
             encounters  = Object.values(myArr)[0]; 
             console.log("ENCOUNTERS");
             console.log(encounters);
+            if(table ===null){
+                console.log("NULL");
+                table = document.createElement("table");
+                createTableFromJSON();
+            }else{
+                console.log("NOT NULL");
+                addOneRowToTable();
+            }
+            
         }
     };
     xmlhttp.open("GET", url, true);
     xmlhttp.send(); 
 };
+
 function newMatch(){
     var x = document.getElementById("frm1");
     var text = "";
@@ -51,6 +65,7 @@ function newMatch(){
     //newMatch(text1,text2);
     loadJSONnewMatch(urlNew+text1+"&"+text2);
     document.getElementById("matches").innerHTML = "Done";
+    
     
 };
 function showTable(){

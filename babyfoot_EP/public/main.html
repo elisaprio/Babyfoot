@@ -5,7 +5,7 @@
         <script type="text/javascript" src="javascripts/onClickFunction.js"></script>
     </head>
 
-    <body onload="createTableFromJSON()">
+    <body id="body">
         <div id="title">
             <h1>Babyfoot HTML</h1>
         </div>
@@ -16,7 +16,7 @@
                     Player Two : <input type ="text" id="player2" name="player2">
                     <button type="button" onclick="newMatch();"> New </button>
 
-                    <p id="matches" onchange="loadJSONTable('http://localhost:3000/all');createTableFromJSON();"></p>
+                    <p id="matches"></p>
             </form>
 
         </div>
@@ -25,6 +25,7 @@
             <input type="button" onclick="loadJSONTable('http://localhost:3000/all');" value="Load JSON" />
             <input type="button" onclick="createTableFromJSON();" value="Create Table From JSON" />
             <input type="button" onclick="addOneRowToTable();" value="Add Row" />
+            
             <div id="showData"></div>
 
 
