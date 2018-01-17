@@ -14,7 +14,7 @@
                     Player One : <input type ="text" id="player1" name="player1">
                     VS
                     Player Two : <input type ="text" id="player2" name="player2">
-                    <button type="button" onclick="newMatch();"> New </button>
+                    <button type="button" id="newButton" onclick="newMatch();"> New </button>
 
                     <p id="matches"></p>
             </form>
@@ -22,9 +22,7 @@
         </div>
         <div id="displayMatches">
             <h1>Matches</h1>
-            <input type="button" onclick="loadJSONTable('http://localhost:3000/all');" value="Load JSON" />
-            <input type="button" onclick="createTableFromJSON();" value="Create Table From JSON" />
-            <input type="button" onclick="addOneRowToTable();" value="Add Row" />
+            <p id="notOver"></p>
             
             <div id="showData"></div>
 

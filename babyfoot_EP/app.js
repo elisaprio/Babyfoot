@@ -16,8 +16,6 @@ var app = express();
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
 
-
-
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger('dev'));
@@ -25,9 +23,6 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-
-
-
 
 //app.use('/', index);
 app.use('/users', users);
@@ -43,14 +38,11 @@ app.get('/new', function(req, res, next) {
 });
 */
 
-//queries to show
+//queries to access data in URL
 var db = require(path.join(__dirname, 'public/javascripts','queries.js'));
 app.get('/all', db.getAllMatches);
-
 app.get('/new/:idp1&:idp2',db.createMatch);
-
 app.get('/update/:matchID&:state_e',db.updateMatch);
-
 app.get('/remove/:matchID',db.removeMatch);
 
 

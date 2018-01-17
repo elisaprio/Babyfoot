@@ -8,7 +8,6 @@ var options = {
   promiseLib: promise
 };
 
-
 //var connectionString = 'postgres://localhost:5432/babyfootEP';
 var db = pgp({//connectionString
   host: 'localhost',
@@ -18,7 +17,6 @@ var db = pgp({//connectionString
   password: 'ideolys'
   }
   );
-
 
 // add query functions
 function getAllMatches(req, res, next) {
@@ -36,8 +34,6 @@ function getAllMatches(req, res, next) {
       return next(err);
     });
 }
-
-
 
 function updateMatch(req, res, next) {
     var query = 'update encounters set state_e=$1 where id_e=$2';
@@ -95,7 +91,6 @@ function createMatch(req, res, next) {
     return next(err);
   });
 }
-
 
 module.exports = {
   getAllMatches: getAllMatches,
