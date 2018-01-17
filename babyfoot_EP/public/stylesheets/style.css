@@ -1,79 +1,80 @@
 body {
   padding: 50px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+  font-family: Tahoma, Geneva, sans-serif;
 }
 
-a {
-  color: #00B7FF;
+div{
+  font-family: Tahoma, Geneva, sans-serif;
+}
+
+p{
+  font-family: Tahoma, Geneva, sans-serif;
+  margin-right:20px;
 }
 
 button {
+  font-family: Tahoma, Geneva, sans-serif;
   background-color: rgb(244, 247, 244); /* Green */
   border: none;
   color: rgb(26, 180, 12);
-  padding: 15px 32px;
+  padding: 5px 5px;
   text-align: center;
   text-decoration: none;
   display: inline-block;
   font-size: 16px;
 }
 
-input{
- 
-  margin-right:20px;
-}
-p{
-  
-  margin-right:20px;
-}
 
-table.blueTable {
+
+table {
   font-family: Tahoma, Geneva, sans-serif;
-  border: 1px solid #55DCEA;
-  background-color: #FDFFFF;
   width: 100%;
   text-align: left;
   border-collapse: collapse;
 }
-table.blueTable td, table.blueTable th {
+
+table td, table th {
   padding: 3px 2px;
 }
-table.blueTable tbody td {
-  font-size: 13px;
-  color: #757575;
+table tbody td {
+  font-family: Tahoma, Geneva, sans-serif;
+  font-size: 15px;
 }
-table.blueTable tr:nth-child(even) {
+
+table tr:nth-child(even) {
   background: #FFFFFF;
 }
-table.blueTable td:nth-child(even) {
+
+#table tr:hover {
+  background-color: #ddd;
+}
+
+table td:nth-child(even) {
   background: #FFFFFF;
 }
-table.blueTable thead {
+
+
+table input{
+  font-family: Tahoma, Geneva, sans-serif;
+  margin-right:20px;
+  font-size: 15px;
+}
+
+table thead {
+  font-family: Tahoma, Geneva, sans-serif;
   background: #36B58A;
   background: -moz-linear-gradient(top, #68c7a7 0%, #4abc95 66%, #36B58A 100%);
   background: -webkit-linear-gradient(top, #68c7a7 0%, #4abc95 66%, #36B58A 100%);
   background: linear-gradient(to bottom, #68c7a7 0%, #4abc95 66%, #36B58A 100%);
 }
-table.blueTable thead th {
+
+table thead th {
+  font-family: Tahoma, Geneva, sans-serif;
   font-size: 15px;
   font-weight: bold;
   color: #FDFEFF;
   border-left: 2px solid #FDFFFF;
 }
-table.blueTable thead th:first-child {
+table thead th:first-child {
   border-left: none;
-}
-
-table.blueTable tfoot td {
-  font-size: 14px;
-}
-table.blueTable tfoot .links {
-  text-align: right;
-}
-table.blueTable tfoot .links a{
-  display: inline-block;
-  background: #1C6EA4;
-  color: #FFFFFF;
-  padding: 2px 8px;
-  border-radius: 5px;
 }

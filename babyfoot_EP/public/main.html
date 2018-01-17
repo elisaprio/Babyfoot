@@ -11,10 +11,20 @@
         </div>
         <div id="newMatch">
             <form id="frm1" action="/submit">
-                    Player One : <input type ="text" id="player1" name="player1">
-                    VS
-                    Player Two : <input type ="text" id="player2" name="player2">
-                    <button type="button" id="newButton" onclick="newMatch();"> New </button>
+                    <td>
+                        <tr>
+                            Player One : <input type ="text" id="player1" name="player1"> 
+                        </tr>
+                        <tr>VS</tr>
+                        <tr>
+                            Player Two : <input type ="text" id="player2" name="player2">
+                        </tr>
+                    </td>
+                    <td>
+                        <button type="button" id="newButton" name="newButton" onclick="newMatch();"> New </button>
+                    </td>
+
+                
 
                     <p id="matches"></p>
             </form>

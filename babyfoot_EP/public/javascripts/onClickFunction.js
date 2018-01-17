@@ -2,23 +2,24 @@ let urlAll = "http://localhost:3000/all/";
 let urlNew = "http://localhost:3000/new/";
 let urlRemove = "http://localhost:3000/remove/";
 let urlUpdate = "http://localhost:3000/update/";
-var encounters = [];
+let txtCount = "Number of matches still left to play : ";
 
-// CREATE DYNAMIC TABLE.
-//var table = document.createElement("table");
+
+// Create global variables
+var encounters = []; //all matches, from JSON
 var table = null;
-var col = [];
-var countNotOver = 0;
+var col = []; //col of the table
+var countNotOver = 0; //count of unfinished matches
 
-//ON LOAD TABLE
+//To display the html table right after the page is opened
 document.addEventListener("load", loadJSONTable(urlAll),true);
+//Possible to add an element while pressing the "enter" key
 document.addEventListener("keyup",function (e){
         var key = e.keyCode ? e.keyCode : e.which;
         if(key == 13){
             newMatch();
         }
 });
-
 
 function loadJSONTable(url){
     console.log("JSON LOAD");
@@ -31,13 +32,16 @@ function loadJSONTable(url){
             console.log(encounters);
             if(table ===null){
                 console.log("NULL");
-                table = document.createElement("table");
-                createTableFromJSON();
             }else{
                 console.log("NOT NULL / ADD ROW");
-                addOneRowToTable();
+                //addOneRowToTable();
+                table = null;
+                col=[];
+                countNotOver = 0;
             }
-            document.getElementById("notOver").innerHTML = countNotOver;
+            table = document.createElement("table");
+            createTableFromJSON();
+            document.getElementById("notOver").innerHTML = txtCount+countNotOver;
         }    
     };
     xmlhttp.open("GET", url, true);
@@ -68,16 +72,15 @@ function loadJSONremove(url,index,button){
         if (this.readyState == 4 && this.status == 200) {
             var myArr = JSON.parse(this.responseText);
             console.log(myArr);
-            encounters  = Object.values(myArr)[0]; 
+            //encounters  = Object.values(myArr)[0]; 
             var idrow = button.parentNode.parentNode.rowIndex;
             console.log("DELETE ROW "+idrow);
-            console.log(encounters);
-            //console.log((encounters[0][col[2]]).toString()); 
-            if(encounters[idrow-1][col[4]]===true){
-                countNotOver-=1;
+            if(encounters[idrow-1][col[4]]===false){
+                countNotOver= countNotOver - 1;
             } 
+            document.getElementById("notOver").innerHTML = txtCount+countNotOver;
             table.deleteRow(idrow); 
-            document.getElementById("notOver").innerHTML = countNotOver;
+            
         }
     };
     xmlhttp.open("GET", url+index, true);
@@ -97,60 +100,35 @@ function loadJSONnewMatch(url){
     xmlhttp.send(); 
 }
 
-function newMatch(){
-    var x = document.getElementById("frm1");
-    var text = "";
-    var i;
-    for (i = 0; i < x.length ;i++) {
-        text += x.elements[i].value;
+//create an html table
+function createTableFromJSON() {
+    console.log("CREATE TABLE");
+    // EXTRACT VALUE FOR HTML HEADER. 
+    //For the end game checkbox
+    col.push("");
+    for (var i = 0; i < encounters.length; i++) {
+        for (var key in encounters[i]) {
+            if (col.indexOf(key) === -1) {
+                col.push(key);
+            }
+        }
     }
-    var text1 = x.elements[0].value;
-    var text2 = x.elements[1].value;
-    document.getElementById("matches").innerHTML = text1+text2;
-    loadJSONnewMatch(urlNew+text1+"&"+text2);
-    document.getElementById("matches").innerHTML = "Done";
-    x.reset();
+    //For the remove buttons
+    col.push("");
     
+    // CREATE HTML TABLE HEADER ROW USING THE EXTRACTED HEADERS ABOVE.
+    /*
+    var tr = table.insertRow(-1);                   // TABLE ROW.
+    for (var i = 0; i < col.length; i++) {
+        var th = document.createElement("th");      // TABLE HEADER.
+        th.innerHTML = col[i];
+        tr.appendChild(th);
+    }
+    */
+    addRowsToTable();
+    showTable();
+    console.log("TABLE CREATED");
 };
-function showTable(){
-    // FINALLY ADD THE NEWLY CREATED TABLE WITH JSON DATA TO A CONTAINER.
-    var divContainer = document.getElementById("showData");
-    divContainer.innerHTML = "";
-    divContainer.appendChild(table);
-};
-
-//To add button to one row
-function addButton(index){
-    var button = document.createElement("button");
-    button.setAttribute('type', 'button');
-    button.setAttribute('value', "Remove");
-    var textnode = document.createTextNode("Remove");         // Create a text node
-    button.appendChild(textnode);
-    var id ="b"+index;
-    button.setAttribute("id",id);
-    //button.onclick = function () {loadJSONremove(urlRemove,this.index);};   ,'+this+'
-   // button.setAttribute('onclick', 'loadJSONremove(urlRemove,'+index+','+idrow+');');
-    button.addEventListener("click",function (){
-       // document.getElementById(id).
-        loadJSONremove(urlRemove,index,button);
-    });
-    return button;
-}
-
-function addCheckboxEnd(index){
-    var checkbox = document.createElement("input");
-    checkbox.setAttribute('type', 'checkbox');
-    checkbox.setAttribute('value', "End");
-    var id ="c"+index;
-    checkbox.setAttribute("id",id);
-    checkbox.addEventListener("change",function (){
-        loadJSONend(urlUpdate,index,checkbox);
-
-    });
-    return checkbox;
-    
-}
-
 
 // ADD JSON DATA TO THE TABLE AS ROWS.
 function addRowsToTable(){
@@ -177,7 +155,6 @@ function addRowsToTable(){
         }
         if(box.checked){
             tr.style.color = "rgb(226, 238, 238)";
-
         }
         //Button remove
         var tabCell = tr.insertCell(-1);
@@ -186,6 +163,33 @@ function addRowsToTable(){
     }
 };
 
+//add the table to the html code
+function showTable(){
+    // FINALLY ADD THE NEWLY CREATED TABLE WITH JSON DATA TO A CONTAINER.
+    var divContainer = document.getElementById("showData");
+    divContainer.innerHTML = "";
+    divContainer.appendChild(table);
+};
+
+/*Get the value from the input fields on the html code with the players name, 
+call for the function add an element to the table*/
+function newMatch(){
+    //get values in input areas
+    var x = document.getElementById("frm1");
+    var text = "";
+    var i;
+    for (i = 0; i < x.length ;i++) {
+        text += x.elements[i].value;
+    }
+    var text1 = x.elements[0].value;
+    var text2 = x.elements[1].value;
+    loadJSONnewMatch(urlNew+text1+"&"+text2);
+    document.getElementById("matches").innerHTML = "Done";
+    x.reset();
+    
+};
+
+//Add one row to the table when an element is added into the database
 function addOneRowToTable(){
     console.log("NEW ROW");
     tr = table.insertRow(-1);
@@ -208,30 +212,35 @@ function addOneRowToTable(){
     tabCell.appendChild(btn);
 }
 
-function createTableFromJSON() {
-    console.log("CREATE TABLE");
-    // EXTRACT VALUE FOR HTML HEADER. 
-    //For the end game checkbox
-    col.push("");
-    for (var i = 0; i < encounters.length; i++) {
-        for (var key in encounters[i]) {
-            if (col.indexOf(key) === -1) {
-                col.push(key);
-            }
-        }
-    }
-    //For the remove buttons
-    col.push("");
+//Create a button with the right properties to remove an element from the database while clicked
+function addButton(index){
+    var button = document.createElement("button");
+    button.setAttribute('type', 'button');
+    button.setAttribute('value', "Remove");
+    var textnode = document.createTextNode("Remove");         // Create a text node
+    button.appendChild(textnode);
+    var id ="b"+index;
+    button.setAttribute("id",id);
+    //button.onclick = function () {loadJSONremove(urlRemove,this.index);};   ,'+this+'
+   // button.setAttribute('onclick', 'loadJSONremove(urlRemove,'+index+','+idrow+');');
+    button.addEventListener("click",function (){
+       // document.getElementById(id).
+        loadJSONremove(urlRemove,index,button);
+    });
+    return button;
+}
+
+//Create a checkbox with the right properties to update an element from the database while checked (match finished or not)
+function addCheckboxEnd(index){
+    var checkbox = document.createElement("input");
+    checkbox.setAttribute('type', 'checkbox');
+    checkbox.setAttribute('value', "End");
+    var id ="c"+index;
+    checkbox.setAttribute("id",id);
+    checkbox.addEventListener("change",function (){
+        loadJSONend(urlUpdate,index,checkbox);
+
+    });
+    return checkbox;
     
-    // CREATE HTML TABLE HEADER ROW USING THE EXTRACTED HEADERS ABOVE.
-    var tr = table.insertRow(-1);                   // TABLE ROW.
-    for (var i = 0; i < col.length; i++) {
-        var th = document.createElement("th");      // TABLE HEADER.
-        th.innerHTML = col[i];
-        tr.appendChild(th);
-    }
-    addRowsToTable();
-    showTable();
-    console.log("TABLE CREATED");
-};
- 
+}
