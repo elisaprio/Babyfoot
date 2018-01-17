@@ -30,15 +30,9 @@ function loadJSONTable(url){
             encounters  = Object.values(myArr)[0]; 
             console.log("ENCOUNTERS");
             console.log(encounters);
-            if(table ===null){
-                console.log("NULL");
-            }else{
-                console.log("NOT NULL / ADD ROW");
-                //addOneRowToTable();
-                table = null;
-                col=[];
-                countNotOver = 0;
-            }
+            table = null;
+            col=[];
+            countNotOver = 0;
             table = document.createElement("table");
             createTableFromJSON();
             document.getElementById("notOver").innerHTML = txtCount+countNotOver;
@@ -48,63 +42,35 @@ function loadJSONTable(url){
     xmlhttp.send(); 
 };
 
-function loadJSONend(url,index,box){
-    console.log("JSON LOAD UPDATE");
-    var xmlhttp = new XMLHttpRequest();
-    xmlhttp.onreadystatechange = function() {
-        if (this.readyState == 4 && this.status == 200) {
-            console.log("UPDATE ROW "); 
-            table = null;
-            col=[];
-            countNotOver = 0;
-            loadJSONTable(urlAll);
-        }
-    };    
-    var url2 =  url+index+"&"+box.checked.toString();
-    xmlhttp.open("GET",url2, true);
-    xmlhttp.send();
-}
+//To send request for adding, updating or deleting an element in table
+function loadOption(url,requestType,objOpt){
+    if (typeof objOpt === 'undefined') { optionalArg = 'default'; }
+    var consoleLog = "";
+    switch(requestType){
+        case "add":
+            consoleLog = "ADD ROW";
+        case "update":
+            consoleLog = "UPDATE ROW";
 
-function loadJSONremove(url,index,button){
-    console.log("JSON LOAD REMOVE");
+        case "remove":
+            consoleLog = "REMOVE ROW";
+    }
+    console.log(consoleLog);
     var xmlhttp = new XMLHttpRequest();
     xmlhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
-            var myArr = JSON.parse(this.responseText);
-            console.log(myArr);
-            //encounters  = Object.values(myArr)[0]; 
-            var idrow = button.parentNode.parentNode.rowIndex;
-            console.log("DELETE ROW "+idrow);
-            if(encounters[idrow-1][col[4]]===false){
-                countNotOver= countNotOver - 1;
-            } 
-            document.getElementById("notOver").innerHTML = txtCount+countNotOver;
-            table.deleteRow(idrow); 
-            
-        }
-    };
-    xmlhttp.open("GET", url+index, true);
-    xmlhttp.send();
-}
-
-function loadJSONnewMatch(url){
-    var xmlhttp = new XMLHttpRequest();
-    xmlhttp.onreadystatechange = function() {
-        if (this.readyState == 4 && this.status == 200) {
-            var myArr = JSON.parse(this.responseText);
-            console.log(myArr);
             loadJSONTable(urlAll);   
         }
     };
     xmlhttp.open("GET", url, true);
     xmlhttp.send(); 
-}
+};
 
 //create an html table
 function createTableFromJSON() {
     console.log("CREATE TABLE");
     // EXTRACT VALUE FOR HTML HEADER. 
-    //For the end game checkbox
+    //For the update game checkbox
     col.push("");
     for (var i = 0; i < encounters.length; i++) {
         for (var key in encounters[i]) {
@@ -138,7 +104,7 @@ function addRowsToTable(){
         tr = table.insertRow(-1);
         //checkbox
         var tabCell = tr.insertCell(-1);
-        var box = addCheckboxEnd(encounters[i][col[1]]);
+        var box = addCheckboxUpdate(encounters[i][col[1]]);
         tabCell.appendChild(box);
 
         for (var j = 1; j < col.length-1; j++) {
@@ -183,34 +149,13 @@ function newMatch(){
     }
     var text1 = x.elements[0].value;
     var text2 = x.elements[1].value;
-    loadJSONnewMatch(urlNew+text1+"&"+text2);
-    document.getElementById("matches").innerHTML = "Done";
+    var url = urlNew+text1+"&"+text2;
+    //loadJSONnewMatch(urlNew+text1+"&"+text2);
+    loadOption(url,"add");
+   // document.getElementById("matches").innerHTML = "Done";
     x.reset();
     
 };
-
-//Add one row to the table when an element is added into the database
-function addOneRowToTable(){
-    console.log("NEW ROW");
-    tr = table.insertRow(-1);
-    //checkbox
-    var tabCell = tr.insertCell(-1);
-    var box = addCheckboxEnd(encounters[encounters.length-1][col[1]]);
-    tabCell.appendChild(box); 
-
-    for (var j = 1; j < col.length-1; j++) {
-        var tabCell = tr.insertCell(-1);
-        tabCell.innerHTML = encounters[encounters.length-1][col[j]];
-        if(j===1){
-            var index = tabCell.textContent;
-        }
-    }
-    countNotOver+=1;
-    //Button to remove row
-    var tabCell = tr.insertCell(-1);
-    var btn = addButton(index);
-    tabCell.appendChild(btn);
-}
 
 //Create a button with the right properties to remove an element from the database while clicked
 function addButton(index){
@@ -225,21 +170,25 @@ function addButton(index){
    // button.setAttribute('onclick', 'loadJSONremove(urlRemove,'+index+','+idrow+');');
     button.addEventListener("click",function (){
        // document.getElementById(id).
-        loadJSONremove(urlRemove,index,button);
+       var url = urlRemove+index;
+        //loadJSONremove(url);
+        loadOption(url,"remove",button);
     });
     return button;
 }
 
 //Create a checkbox with the right properties to update an element from the database while checked (match finished or not)
-function addCheckboxEnd(index){
+function addCheckboxUpdate(index){
     var checkbox = document.createElement("input");
     checkbox.setAttribute('type', 'checkbox');
-    checkbox.setAttribute('value', "End");
+    checkbox.setAttribute('value', "Update");
     var id ="c"+index;
     checkbox.setAttribute("id",id);
     checkbox.addEventListener("change",function (){
-        loadJSONend(urlUpdate,index,checkbox);
-
+        var url = urlUpdate+index+"&"+checkbox.checked.toString();
+        console.log("URL "+url);
+        //loadJSONUpdate(url);
+        loadOption(url,"update",checkbox);
     });
     return checkbox;
     
