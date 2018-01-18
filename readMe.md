@@ -23,7 +23,7 @@ $ Ouvrir le fichier databases/database.js
 $ node databases/database.js
 ```
 
-## Execution :
+## Execution
 - Lancement du serveur :
 ```
 $ npm run start
