@@ -1,25 +1,32 @@
-Outils : 
-
+## Outils : 
 - Installation de Node
-- PostgreSQL
+- PostgreSQL et PgAdmin4
 
-Installation :
+## Installation :
+- Copie du projet 
+```
+$ git clone https://gitlab.com/elisaprio/babyfootEP/
+```
+- Installation des node modules
+```
+$ npm install
+```
 
-git clone 
-    https://gitlab.com/elisaprio/babyfootEP/tree/master
-
-run
-    npm install
-
-Base de donnée:
-- Creation de la BD
-- Open databases/database.js
-- Change les paramètres de config (port sur laquelle est la BD, nom, user et password)
-- run 
+## Base de donnée:
+- Creation de la BD dans pgadmin4
+```
+$ Open databases/database.js
+```
+- Changer les paramètres de config (port sur laquelle est la BD, nom, user et password)
+- Lancement du code qui ajoute la table à la base de données (si ce n'est pas fait via pgAdmin4)
     node databases/database.js
 
-Execution :
-Lancement du serveur
-    npm run start
-Dans le browser:
-    localhost:3000
+## Execution :
+- Lancement du serveur
+```
+$ npm run start
+```
+- Lancement du client (connexion dans le navigateur)
+```
+$ http://localhost:3000
+```
