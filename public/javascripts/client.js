@@ -1,5 +1,3 @@
-//import io from 'socket.io-client';
-
 let urlAll = "http://localhost:3000/all/";
 let urlNew = "http://localhost:3000/new/";
 let urlRemove = "http://localhost:3000/remove/";
@@ -13,19 +11,24 @@ var table = null;
 var col = []; //col of the table
 var countNotOver = 0; //count of unfinished matches
 
+//Create socket and socket functionnalities
 console.log("CREATE CLIENT SOCKET");
 var socket = io.connect('http://localhost:3000');
 socket.on('news', function (data) {
-console.log(data);
-socket.emit('my other event', { my: 'data' });
+    console.log(data);
+    socket.emit('my other event', { my: 'data' });
 });
-
 
 socket.on('load', function (data) {
     console.log("load");
     console.log(data);
     loadJSONTable();
  });
+
+function updateSocket(){
+    console.log('UPDATE SOCKET');
+    socket.emit('update', { table: 'updated' });
+};
 
 //To display the html table right after the page is opened
 //document.addEventListener("load", createSocket(),true);
@@ -37,13 +40,6 @@ document.addEventListener("keyup",function (e){
             newMatch();
         }
 });
-
-
-function updateSocket(){
-    console.log('UPDATE SOCKET');
-    socket.emit('update', { table: 'updated' });
-}
-
 
 function loadJSONTable(){
     console.log("JSON LOAD");

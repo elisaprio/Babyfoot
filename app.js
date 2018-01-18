@@ -2,40 +2,27 @@ var express = require('express');
 var path = require('path');
 var favicon = require('serve-favicon');
 var logger = require('morgan');
-var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var http = require('http');
 
-var index = require('./routes/index');
-var users = require('./routes/users');
-
+//Create the express app
 var app = express();
 
 
-// view engine setup
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'pug');
-
 // uncomment after placing your favicon in /public
-//app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
+app.use(favicon(path.join(__dirname, 'public', 'images/icon.ico')));
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 
-
-//app.use('/', index);
-app.use('/users', users);
-
 //render page
 app.get('/', function(req, res, next) {
-  //res.sendFile(path.join(__dirname, 'node_modules','html/main.html'));
   res.sendFile(path.join(__dirname, 'public','html/main.html'));
 });
 
-//app get sans le routeur
+//Get the database and associated queries
 var db = require(path.join(__dirname, 'public','javascripts/queries.js'));
 
 app.get('/all', db.getAllMatches);
@@ -44,7 +31,7 @@ app.get('/update/:matchID&:state_e',db.updateMatch);
 app.get('/remove/:matchID',db.removeMatch);
 
 
-//server socket
+//server and socket
 app.set('port', process.env.PORT || 3000);
 var server = http.createServer(app);
 
@@ -53,21 +40,23 @@ server.listen(app.get('port'), function(){
 });
 
 var io = require('socket.io').listen(server);
-
+//when a socket connects
 io.sockets.on('connection', function (socket) {
   console.log("SOCKET SERVEUR CONNECTE");
+  //new client receives hello worls
   socket.emit('news', { hello: 'world' });
+  //then client answers and servers logs the data
   socket.on('my other event', function (data) {
     console.log(data);
   });
+  //when the socket receives update, il means the db has been updated by the client
+  //socket emits to all other clients (except the one that sent the data)
+  //tell them to update their table too
   socket.on('update', function (data) {
     console.log("GOT UPDATE");
     socket.broadcast.emit('load', { table: 'reload' });
-  });
-  
+  });  
 });
-
-
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

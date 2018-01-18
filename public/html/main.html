@@ -1,10 +1,9 @@
 <html>
     <head>
-            <title>Babyfoot</title>
+        <title>Babyfoot</title>
         <link rel="stylesheet" type="text/css" href="../stylesheets/style.css">
         <script src="/socket.io/socket.io.js"></script>
         <script type="text/javascript" src="../javascripts/client.js"></script>
-        
     </head>
     <body id="body">
         <div id="title">
@@ -26,23 +25,11 @@
                     </td>
                     <p id="matches"></p>
             </form>
-
         </div>
         <div id="displayMatches">
             <h1>Matches</h1>
             <p id="notOver"></p>
             <div id="showData"></div>
         </div>
-       <!--
-        <script type="text/javascript">console.log("PASSE PAR ICI")</script>
-        <script src="/socket.io/socket.io.js"></script>
-        <script> console.log("CONNECTED CLIENT SOCKET");
-                var socket = io.connect('http://localhost:3000');
-                console.log("CONNECTED CLIENT SOCKET");
-                socket.on('news', function (data) {
-                console.log(data);
-                socket.emit('my other event', { my: 'data' });
-                });</script>
-            -->
     </body>
 </html>
