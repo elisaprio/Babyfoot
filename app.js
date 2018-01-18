@@ -4,7 +4,7 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-
+var http = require('http');
 
 var index = require('./routes/index');
 var users = require('./routes/users');
@@ -24,13 +24,49 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', index);
+
+
+//app.use('/', index);
 app.use('/users', users);
 
 //render page
 app.get('/', function(req, res, next) {
-  res.sendFile(path.join(__dirname, 'public','main.html'));
+  //res.sendFile(path.join(__dirname, 'node_modules','html/main.html'));
+  res.sendFile(path.join(__dirname, 'public','html/main.html'));
 });
+
+//app get sans le routeur
+var db = require(path.join(__dirname, 'public','javascripts/queries.js'));
+
+app.get('/all', db.getAllMatches);
+app.get('/new/:idp1&:idp2',db.createMatch);
+app.get('/update/:matchID&:state_e',db.updateMatch);
+app.get('/remove/:matchID',db.removeMatch);
+
+
+//server socket
+app.set('port', process.env.PORT || 3000);
+var server = http.createServer(app);
+
+server.listen(app.get('port'), function(){
+  console.log('Express server listening on port ' + app.get('port'));
+});
+
+var io = require('socket.io').listen(server);
+
+io.sockets.on('connection', function (socket) {
+  console.log("SOCKET SERVEUR CONNECTE");
+  socket.emit('news', { hello: 'world' });
+  socket.on('my other event', function (data) {
+    console.log(data);
+  });
+  socket.on('update', function (data) {
+    console.log("GOT UPDATE");
+    socket.broadcast.emit('load', { table: 'reload' });
+  });
+  
+});
+
 
 
 // catch 404 and forward to error handler

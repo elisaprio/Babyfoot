@@ -1,27 +1,11 @@
 extends layout
 
 block content
-  h1= title
-  h2 Welcome Elisa to #{title}
+
 
 
 block newMatch
-  input(list='players', id='player1')
-  p VS 
-  input(list='players', id='player2')
-  datalist(id='players')
-    option(value='Elisa')
-    option(value='Adil')
-    option(value='Lea')
-    option(value='Tristan')
-    option(value='Adele')
-  script(src='../public/javascripts/queries.js')
-  button(type = 'button', 
-        name='NewMatchButton', 
-        onClick= newMatch()) New Game
-  
 
 
 block displayMatches
-  h1 Matches
-  p(id='matches') Welcome Toto to #{title}
+

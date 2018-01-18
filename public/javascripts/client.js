@@ -1,3 +1,5 @@
+//import io from 'socket.io-client';
+
 let urlAll = "http://localhost:3000/all/";
 let urlNew = "http://localhost:3000/new/";
 let urlRemove = "http://localhost:3000/remove/";
@@ -11,8 +13,23 @@ var table = null;
 var col = []; //col of the table
 var countNotOver = 0; //count of unfinished matches
 
+console.log("CREATE CLIENT SOCKET");
+var socket = io.connect('http://localhost:3000');
+socket.on('news', function (data) {
+console.log(data);
+socket.emit('my other event', { my: 'data' });
+});
+
+
+socket.on('load', function (data) {
+    console.log("load");
+    console.log(data);
+    loadJSONTable();
+ });
+
 //To display the html table right after the page is opened
-document.addEventListener("load", loadJSONTable(urlAll),true);
+//document.addEventListener("load", createSocket(),true);
+document.addEventListener("load", loadJSONTable(),true);
 //Possible to add an element while pressing the "enter" key
 document.addEventListener("keyup",function (e){
         var key = e.keyCode ? e.keyCode : e.which;
@@ -21,7 +38,14 @@ document.addEventListener("keyup",function (e){
         }
 });
 
-function loadJSONTable(url){
+
+function updateSocket(){
+    console.log('UPDATE SOCKET');
+    socket.emit('update', { table: 'updated' });
+}
+
+
+function loadJSONTable(){
     console.log("JSON LOAD");
     var xmlhttp = new XMLHttpRequest();
     xmlhttp.onreadystatechange = function() {
@@ -36,30 +60,22 @@ function loadJSONTable(url){
             table = document.createElement("table");
             createTableFromJSON();
             document.getElementById("notOver").innerHTML = txtCount+countNotOver;
+            
         }    
     };
-    xmlhttp.open("GET", url, true);
+    xmlhttp.open("GET", urlAll, true);
     xmlhttp.send(); 
 };
 
 //To send request for adding, updating or deleting an element in table
 function loadOption(url,requestType,objOpt){
     if (typeof objOpt === 'undefined') { optionalArg = 'default'; }
-    var consoleLog = "";
-    switch(requestType){
-        case "add":
-            consoleLog = "ADD ROW";
-        case "update":
-            consoleLog = "UPDATE ROW";
-
-        case "remove":
-            consoleLog = "REMOVE ROW";
-    }
-    console.log(consoleLog);
+    console.log("REQ "+requestType);
     var xmlhttp = new XMLHttpRequest();
     xmlhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
-            loadJSONTable(urlAll);   
+            updateSocket();
+            loadJSONTable();   
         }
     };
     xmlhttp.open("GET", url, true);
