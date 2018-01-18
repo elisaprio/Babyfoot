@@ -13,13 +13,15 @@ $ npm install
 ```
 
 ## Base de données
-- Creation de la BD dans pgadmin4 :
+- Creation de la BD dans pgadmin4
+- Changer les paramètres de config (port sur laquelle est la BD, nom, user et password) : 
 ```
-$ Open databases/database.js
+$ Ouvrir le fichier databases/database.js
 ```
-- Changer les paramètres de config (port sur laquelle est la BD, nom, user et password)
 - Lancement du code qui ajoute la table à la base de données (si ce n'est pas fait via pgAdmin4) :
-    node databases/database.js
+```
+$ node databases/database.js
+```
 
 ## Execution :
 - Lancement du serveur :
